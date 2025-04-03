@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDTO {
-    private String Name;
-    private LocalDate DateOfBirth;
-    private String Gender;
+    private String name;
+    private LocalDate dateOfBirth;
+    private String gender;
     private String uniqueCode;
     List<AddressDTO> addressDTOList = new ArrayList<>();
     List<CourseDTO> courseDTOList = new ArrayList<>();
@@ -19,27 +19,27 @@ public class StudentDTO {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public LocalDate getDateOfBirth() {
-        return DateOfBirth;
+        return dateOfBirth;
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
-        DateOfBirth = dateOfBirth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getGender() {
-        return Gender;
+        return gender;
     }
 
     public void setGender(String gender) {
-        Gender = gender;
+        this.gender = gender;
     }
 
     public String getUniqueCode() {
