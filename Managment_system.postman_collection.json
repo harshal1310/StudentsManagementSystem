@@ -1,0 +1,131 @@
+{
+	"info": {
+		"_postman_id": "ce565ca2-dcfd-4d6d-9add-70c6c08c8d6d",
+		"name": "Managment system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "37201659"
+	},
+	"item": [
+		{
+			"name": "addadmin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"adminUser\",\n  \"password\": \"adminPass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/admin/register"
+			},
+			"response": []
+		},
+		{
+			"name": "adminlogin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"adminUser\",\n  \"password\": \"adminPass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/admin/login"
+			},
+			"response": []
+		},
+		{
+			"name": "addcourse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"courseName\": \"Bio\",\n  \"courseType\": \"Science\",\n  \"courseDescription\": \"An introductory course to Mathematics\",\n  \"duration\": \"3 months\",\n  \"topics\": \"Algebra, Geometry, Calculus\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/courses/add"
+			},
+			"response": []
+		},
+		{
+			"name": "getcourses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/courses/all"
+			},
+			"response": []
+		},
+		{
+			"name": "addstudent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"dev\",\n  \"studentAge\": 20,\n  \"studentEmail\": \"axs.doe@example.com\",\n  \"uniqueCode\" : \"1234\",\n    \"gender\" : \"Male\",\n    \"dateOfBirth\" : \"12-09-2025\",\n    \"email\" : \"cdsc@gmail.com\",\n\"number\" : \"1234567809\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/students/add"
+			},
+			"response": []
+		},
+		{
+			"name": "getcoursesofstudent",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "enrollcoursetostudent",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "unenroll",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "searchStudentsByName",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "udentsbycourseid",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
