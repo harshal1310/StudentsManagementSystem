@@ -45,7 +45,7 @@ public class StudentService {
             student.setPassword(studentDTO.getPassword());
             student.setUniqueCode(studentDTO.getUniqueCode());
             studentRepository.save(student);
-            return mapToDTO(student);
+            return mapStudentToDTO(student);
         } catch (DataIntegrityViolationException ex) {
             throw new RuntimeException("A student with this unique code already exists.");
         }
@@ -54,13 +54,13 @@ public class StudentService {
     public List<StudentDTO> getStudentsByName(String name) {
         List<Students> students = studentRepository.findByName(name);
         return students.stream()
-                .map(this::mapToDTO)
+                .map(this::mapStudentToDTO)
                 .collect(Collectors.toList());
     }
     public List<StudentDTO> getStudentsByCourseName(String coursename) {
         List<Students>students =  studentRepository.findByCourseName(coursename);
              return students.stream()
-                .map(this::mapToDTO)
+                .map(this::mapStudentToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -75,7 +75,7 @@ public class StudentService {
             student.getCourses().add(course);
             studentRepository.save(student);
 
-            return mapToDTO(student);
+            return mapStudentToDTO(student);
         } else {
             throw new RuntimeException("Student or Course not found");
         }
@@ -103,13 +103,18 @@ public class StudentService {
         }
     }
 
-        private StudentDTO mapToDTO (Students student){
-            StudentDTO dto = new StudentDTO();
-            dto.setName(student.getName());
-            dto.setDateOfBirth(student.getDateOfBirth());
-            dto.setGender(student.getGender());
-            dto.setUniqueCode(student.getUniqueCode());
-            return dto;
-        }
+
+      protected StudentDTO mapStudentToDTO(Students student) {
+          StudentDTO studentDTO = new StudentDTO();
+          studentDTO.setName(student.getName());
+          studentDTO.setDateOfBirth(student.getDateOfBirth());
+          studentDTO.setGender(student.getGender());
+          studentDTO.setUniqueCode(student.getUniqueCode());
+          studentDTO.setEmail(student.getEmail());
+          studentDTO.setPassword(student.getPassword());
+          studentDTO.setParentsName(student.getParentsName());
+          studentDTO.setNumber(student.getNumber());
+          return studentDTO;
+      }
 
 }

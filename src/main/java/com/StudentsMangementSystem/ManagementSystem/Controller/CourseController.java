@@ -1,6 +1,7 @@
 package com.StudentsMangementSystem.ManagementSystem.Controller;
 
 import com.StudentsMangementSystem.ManagementSystem.DTO.CourseDTO;
+import com.StudentsMangementSystem.ManagementSystem.DTO.StudentDTO;
 import com.StudentsMangementSystem.ManagementSystem.Service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +54,11 @@ public class CourseController {
     public ResponseEntity<List<CourseDTO>> getCourseByName(@PathVariable("uniqueCode") String studentId) {
         return ResponseEntity.ok(courseService.getCourseByStudentId(studentId));
     }
-
+    @GetMapping("/{courseId}/students")
+    public ResponseEntity<List<StudentDTO>> getStudentsByCourseId(@PathVariable Long courseId) {
+        List<StudentDTO> students = courseService.getStudentsByCourseId(courseId);
+        return ResponseEntity.ok(students);
+    }
     @PutMapping("/update/{courseId}")
     public ResponseEntity<String> updateCourse(@PathVariable Long courseId, @RequestBody CourseDTO courseDTO) {
         try {

@@ -13,6 +13,7 @@ public class Students {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
     private LocalDate dateOfBirth;
     private String gender;
     private String email;
@@ -77,7 +78,7 @@ public class Students {
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
-        dateOfBirth = dateOfBirth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getGender() {

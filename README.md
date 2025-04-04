@@ -111,3 +111,26 @@
     "dateOfBirth": "12-09-2025"
   }
 
+
+
+
+
+
+
+
+
+
+Get Students by Course ID
+URL: http://localhost:8080/courses/{courseId}/students
+Method: GET
+Description: Retrieves a list of students enrolled in a specific course.
+Path Parameters:
+courseId (Long): The ID of the course.
+Get Students by Name
+URL: http://localhost:8080/students/studentsByName?name={name}
+Method: GET
+Description: Retrieves a list of students by their name.
+Query Parameters:
+name (String): The name of the student.
+
+

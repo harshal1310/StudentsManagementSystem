@@ -17,9 +17,13 @@ import java.util.stream.Collectors;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final StudentRepository studentRepository;
-    public CourseService(CourseRepository courseRepository,StudentRepository studentRepository) {
+    private final StudentService studentService;
+
+    public CourseService(CourseRepository courseRepository,StudentRepository studentRepository,StudentService studentService) {
         this.courseRepository = courseRepository;
         this.studentRepository = studentRepository;
+        this.studentService = studentService;
+
     }
 
     public CourseDTO addCourse(CourseDTO courseDTO) {
@@ -31,13 +35,13 @@ public class CourseService {
         course.setTopics(courseDTO.getTopics());
 
         Course savedCourse = courseRepository.save(course);
-        return mapToDTO(savedCourse);
+        return mapCourseToDTO(savedCourse);
     }
 
     public List<CourseDTO> getAllCourses() {
         return courseRepository.findAll()
                 .stream()
-                .map(this::mapToDTO)
+                .map(this::mapCourseToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -76,7 +80,7 @@ public class CourseService {
             throw new RuntimeException("Course not found");
         }
        return courses.stream()
-               .map(this::mapToDTO)
+               .map(this::mapCourseToDTO)
                .collect(Collectors.toList());
     }
 
@@ -102,9 +106,19 @@ public class CourseService {
         studentRepository.save(student);
         courseRepository.save(course); // Save the course to update the relationship
     }
+    public List<StudentDTO> getStudentsByCourseId(Long courseId) {
+        Optional<Course> courseOpt = courseRepository.findById(courseId);
+        if (!courseOpt.isPresent()) {
+            throw new RuntimeException("Course with ID " + courseId + " not found");
+        }
 
+        Course course = courseOpt.get();
+        return course.getStudents().stream()
+                .map( student -> studentService.mapStudentToDTO(student))
+                .collect(Collectors.toList());
+    }
 
-    private CourseDTO mapToDTO(Course course) {
+    private CourseDTO mapCourseToDTO(Course course) {
         CourseDTO dto = new CourseDTO();
         dto.setCourseName(course.getCourseName());
         dto.setCourseType(course.getCourseType());
