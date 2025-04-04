@@ -2,6 +2,7 @@ package com.StudentsMangementSystem.ManagementSystem.Controller;
 
 import com.StudentsMangementSystem.ManagementSystem.DTO.CourseDTO;
 import com.StudentsMangementSystem.ManagementSystem.Service.CourseService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,23 +23,44 @@ public class CourseController {
         courseService.addCourse(courseDTO);
         return ResponseEntity.ok("Course added successfully");
     }
-    @PostMapping("/{courseId}/enroll/{studentId}")
-    public ResponseEntity<String> enrollStudentInCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
-        courseService.enrollStudentInCourse(studentId, courseId);
-        return ResponseEntity.ok("Student enrolled in course successfully");
+    @PostMapping("/{courseId}/enroll/{uniqueCode}")
+    public ResponseEntity<String> enrollStudentInCourse(@PathVariable Long courseId, @PathVariable("uniqueCode") String studentId) {
+        try {
+            courseService.enrollStudentInCourse(studentId, courseId);
+            return ResponseEntity.ok("Student enrolled in course successfully");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
-    @DeleteMapping("/{courseId}/unenroll/{studentId}")
-    public ResponseEntity<Void> unenrollStudentFromCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
-        courseService.unenrollStudentFromCourse(studentId, courseId);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/{courseId}/unenroll/{uniqueCode}")
+    public ResponseEntity<String> unenrollStudentFromCourse(@PathVariable Long courseId, @PathVariable("uniqueCode") String studentId) {
+
+        try{
+            courseService.unenrollStudentFromCourse(studentId, courseId);
+
+            return ResponseEntity.ok("Student unenrolled in course successfully");
+
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
     @GetMapping("/all")
     public ResponseEntity<List<CourseDTO>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
 
-    @GetMapping("/{studentId}/courses")
-    public ResponseEntity<List<CourseDTO>> getCourseByName(@PathVariable long studentId) {
+    @GetMapping("/{uniqueCode}")
+    public ResponseEntity<List<CourseDTO>> getCourseByName(@PathVariable("uniqueCode") String studentId) {
         return ResponseEntity.ok(courseService.getCourseByStudentId(studentId));
+    }
+
+    @PutMapping("/update/{courseId}")
+    public ResponseEntity<String> updateCourse(@PathVariable Long courseId, @RequestBody CourseDTO courseDTO) {
+        try {
+            courseService.updateCourse(courseId, courseDTO);
+            return ResponseEntity.ok("Course updated successfully");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
 }

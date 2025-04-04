@@ -7,8 +7,10 @@ import com.StudentsMangementSystem.ManagementSystem.Entity.Students;
 import com.StudentsMangementSystem.ManagementSystem.Repository.CourseRepository;
 import com.StudentsMangementSystem.ManagementSystem.Repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +25,7 @@ public class StudentService {
         this.courseRepository = courseRepository;
     }
     public StudentDTO addStudent(StudentDTO studentDTO) {
-        Students student = new Students();
+       /* Students student = new Students();
 
         student.setName(studentDTO.getName());
         student.setDateOfBirth(studentDTO.getDateOfBirth());
@@ -31,7 +33,22 @@ public class StudentService {
         student.setUniqueCode(studentDTO.getUniqueCode());
 
         Students savedStudent = studentRepository.save(student);
-        return mapToDTO(savedStudent);
+        return mapToDTO(savedStudent);*/
+        try {
+            Students student = new Students();
+            student.setDateOfBirth(studentDTO.getDateOfBirth());
+            student.setEmail(studentDTO.getEmail());
+            student.setGender(studentDTO.getGender());
+            student.setName(studentDTO.getName());
+            student.setNumber(studentDTO.getNumber());
+            student.setParentsName(studentDTO.getParentsName());
+            student.setPassword(studentDTO.getPassword());
+            student.setUniqueCode(studentDTO.getUniqueCode());
+            studentRepository.save(student);
+            return mapToDTO(student);
+        } catch (DataIntegrityViolationException ex) {
+            throw new RuntimeException("A student with this unique code already exists.");
+        }
     }
 
     public List<StudentDTO> getStudentsByName(String name) {
@@ -63,7 +80,28 @@ public class StudentService {
             throw new RuntimeException("Student or Course not found");
         }
     }
+    public boolean verifyStudentIdentity(String studentCode, LocalDate dateOfBirth) {
+        Optional<Students> student = studentRepository.findByUniqueCodeAndDateOfBirth(studentCode, dateOfBirth);
+        return student.isPresent();
+    }
 
+    public void updateStudent(Long studentId, StudentDTO studentDTO) {
+        Optional<Students> studentOpt = studentRepository.findById(studentId);
+        if (studentOpt.isPresent()) {
+            Students student = studentOpt.get();
+            student.setName(studentDTO.getName());
+            student.setDateOfBirth(studentDTO.getDateOfBirth());
+            student.setGender(studentDTO.getGender());
+            student.setEmail(studentDTO.getEmail());
+            student.setNumber(studentDTO.getNumber());
+            student.setParentsName(studentDTO.getParentsName());
+            student.setPassword(studentDTO.getPassword());
+            student.setUniqueCode(studentDTO.getUniqueCode());
+            studentRepository.save(student);
+        } else {
+            throw new RuntimeException("Student not found");
+        }
+    }
 
         private StudentDTO mapToDTO (Students student){
             StudentDTO dto = new StudentDTO();

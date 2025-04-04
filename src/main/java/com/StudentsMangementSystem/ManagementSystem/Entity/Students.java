@@ -15,6 +15,10 @@ public class Students {
     private String name;
     private LocalDate dateOfBirth;
     private String gender;
+    private String email;
+    private String password;;
+    private String parentsName;
+    private String number;
 
     public String getEmail() {
         return email;
@@ -40,18 +44,14 @@ public class Students {
         this.parentsName = parentsName;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
-    private String email;
-    private String password;;
-    private String parentsName;
-    private int number;
 
     public Long getId() {
         return id;

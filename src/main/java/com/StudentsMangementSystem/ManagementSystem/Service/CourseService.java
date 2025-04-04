@@ -41,8 +41,8 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
-    public void unenrollStudentFromCourse(Long studentId, Long courseId) {
-        Optional<Students> studentOpt = studentRepository.findById(studentId);
+    public void unenrollStudentFromCourse(String studentId, Long courseId) {
+        Optional<Students> studentOpt = studentRepository.findByUniqueCode(studentId);
         Optional<Course> courseOpt = courseRepository.findById(courseId);
 
         if (studentOpt.isPresent() && courseOpt.isPresent()) {
@@ -55,30 +55,62 @@ public class CourseService {
             throw new RuntimeException("Student or Course not found");
         }
     }
-
-   public List<CourseDTO> getCourseByStudentId(long studentId) {
-        List<CourseDTO> courseDTO = courseRepository.findByStudentId(studentId);
-        if (courseDTO == null) {
+    public void updateCourse(Long courseId, CourseDTO courseDTO) {
+        Optional<Course> courseOpt = courseRepository.findById(courseId);
+        if (courseOpt.isPresent()) {
+            Course course = courseOpt.get();
+            course.setCourseName(courseDTO.getCourseName());
+            course.setCourseType(courseDTO.getCourseType());
+            course.setCourseDescription(courseDTO.getCourseDescription());
+            course.setDuration(courseDTO.getDuration());
+            course.setTopics(courseDTO.getTopics());
+            courseRepository.save(course);
+        } else {
             throw new RuntimeException("Course not found");
         }
-        return courseDTO;
     }
 
-    public void enrollStudentInCourse(Long studentId, Long courseId) {
-        var course = courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
-        var student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
-        course.getStudents().add(student);
-        courseRepository.save(course);
+   public List<CourseDTO> getCourseByStudentId(String studentId) {
+        List<Course> courses = courseRepository.findByStudentUniqueCode(studentId);
+        if (courses == null) {
+            throw new RuntimeException("Course not found");
+        }
+       return courses.stream()
+               .map(this::mapToDTO)
+               .collect(Collectors.toList());
     }
 
-    private CourseDTO mapToDTO (Course course){
 
+
+    public void enrollStudentInCourse(String studentId, Long courseId) {
+        Optional<Students> studentOpt = studentRepository.findByUniqueCode(studentId);
+        Optional<Course> courseOpt = courseRepository.findById(courseId);
+
+        if (!studentOpt.isPresent()) {
+            throw new RuntimeException("Student with unique code " + studentId + " not found");
+        }
+
+        if (!courseOpt.isPresent()) {
+            throw new RuntimeException("Course with ID " + courseId + " not found");
+        }
+
+        Students student = studentOpt.get();
+        Course course = courseOpt.get();
+
+        student.getCourses().add(course);
+        course.getStudents().add(student); // Ensure the course also references the student
+        studentRepository.save(student);
+        courseRepository.save(course); // Save the course to update the relationship
+    }
+
+
+    private CourseDTO mapToDTO(Course course) {
         CourseDTO dto = new CourseDTO();
-        dto.setCourseName(dto.getCourseName());
-        dto.setCourseType(dto.getCourseType());
-        dto.setCourseDescription(dto.getCourseDescription());
-        dto.setDuration(dto.getDuration());
-        dto.setTopics(dto.getTopics());
+        dto.setCourseName(course.getCourseName());
+        dto.setCourseType(course.getCourseType());
+        dto.setCourseDescription(course.getCourseDescription());
+        dto.setDuration(course.getDuration());
+        dto.setTopics(course.getTopics());
         return dto;
     }
 }
